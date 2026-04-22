@@ -112,6 +112,7 @@ if (USE_FIREBASE) {
 let allVentas  = [];
 let allSorteos = [];
 let editId     = null;
+let participantesVivo = [];
 let activeFilter  = "todos";
 let searchQuery   = "";
 
@@ -158,6 +159,15 @@ const btnSorteo   = $("btn-sorteo");
 const sorteoList  = $("sorteo-list");
 const toastEl     = $("toast");
 
+// Elementos Sorteo Vivo
+const inpVivoNombre     = $("inp-vivo-nombre");
+const btnVivoAdd        = $("btn-vivo-add");
+const vivoLista         = $("vivo-lista");
+const vivoCount         = $("vivo-count");
+const btnVivoStart      = $("btn-vivo-start");
+const vivoGanadorBox    = $("vivo-ganador-box");
+const vivoGanadorNombre = $("vivo-ganador-nombre");
+
 // ============================================================
 //  BOOT
 // ============================================================
@@ -170,6 +180,7 @@ function boot() {
   setupSearch();
   setupSorteoForm();
   setupEditCancel();
+  setupSorteoVivo();
 
   storagePedidos.subscribe(ventas => {
     allVentas = ventas;
@@ -202,6 +213,7 @@ function switchTab(tabName) {
   });
   if (tabName === "buscar")  setTimeout(() => inpSearch.focus(), 80);
   if (tabName === "sorteo")  setTimeout(() => inpGanador.focus(), 80);
+  if (tabName === "sorteo-vivo") setTimeout(() => inpVivoNombre.focus(), 80);
 }
 
 function setupProductoChange() {
@@ -348,6 +360,59 @@ function updateStats() {
   if(statTotal) statTotal.textContent = allVentas.length;
   if(statPending) statPending.textContent = allVentas.filter(v => v.estadoPago === "pendiente").length;
   if(statSorteos) statSorteos.textContent = allSorteos.length;
+}
+
+// ============================================================
+//  SORTEO EN VIVO (LÓGICA)
+// ============================================================
+function setupSorteoVivo() {
+  if(!btnVivoAdd) return;
+
+  btnVivoAdd.addEventListener("click", () => {
+    const nombre = inpVivoNombre.value.trim();
+    if(!nombre) return;
+    participantesVivo.push(nombre);
+    inpVivoNombre.value = "";
+    renderVivoList();
+    inpVivoNombre.focus();
+  });
+
+  inpVivoNombre.addEventListener("keypress", (e) => {
+    if(e.key === "Enter") btnVivoAdd.click();
+  });
+
+  btnVivoStart.addEventListener("click", async () => {
+    if(participantesVivo.length < 2) return;
+    
+    setLoading(btnVivoStart, true);
+    vivoGanadorBox.style.display = "none";
+
+    // Simulamos un efecto de carga dramática de 2 segundos
+    await new Promise(r => setTimeout(r, 2000));
+
+    const ganador = participantesVivo[Math.floor(Math.random() * participantesVivo.length)];
+    
+    setLoading(btnVivoStart, false);
+    vivoGanadorNombre.textContent = ganador;
+    vivoGanadorBox.style.display = "block";
+    
+    showToast(`🏆 ¡Felicidades ${ganador}!`, "ok");
+  });
+
+  window.removeVivo = (idx) => {
+    participantesVivo.splice(idx, 1);
+    renderVivoList();
+  };
+}
+
+function renderVivoList() {
+  vivoLista.innerHTML = participantesVivo.map((n, i) => `
+    <div class="chip chip--active" style="background:var(--raffle-bg); color:var(--raffle); border-color:var(--raffle-border);">
+      ${esc(n)} <span onclick="removeVivo(${i})" style="margin-left:8px; opacity:0.5; cursor:pointer">✕</span>
+    </div>
+  `).join("");
+  vivoCount.textContent = participantesVivo.length;
+  btnVivoStart.disabled = participantesVivo.length < 2;
 }
 
 function renderResults() {
