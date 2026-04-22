@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0b0f0c">
+  <title>Central Variedades — Ventas en Vivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ══════════ HEADER CON LOGO PROMINENTE ══════════ -->
+    <header class="header">
+      <div class="header-brand">
+        <img class="logo-img" src="img/central.png" alt="Central Variedades">
+        <span class="brand-live">
+          <span class="live-dot"></span>
+          Ventas en Vivo
+        </span>
+      </div>
+      <div class="header-stats">
+        <div class="hstat">
+          <span class="hstat-num" id="stat-total">0</span>
+          <span class="hstat-lbl">Ventas</span>
+        </div>
+        <div class="hstat hstat-warn">
+          <span class="hstat-num" id="stat-pending">0</span>
+          <span class="hstat-lbl">Pendientes</span>
+        </div>
+        <div class="hstat hstat-raffle">
+          <span class="hstat-num" id="stat-sorteos">0</span>
+          <span class="hstat-lbl">Sorteos</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════ TABS ══════════ -->
+    <nav class="tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="nueva">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Nueva
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="buscar">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Buscar
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="resumen">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Resumen
+      </button>
+      <button class="tab tab--raffle" role="tab" aria-selected="false" data-tab="sorteo">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Sorteos
+      </button>
+    </nav>
+
+    <!-- ══════════ PANEL: Nueva Venta ══════════ -->
+    <section class="panel active" id="panel-nueva" role="tabpanel">
+      <div class="panel-inner">
+
+        <!-- Banner modo edición (oculto por defecto) -->
+        <div class="edit-banner" id="edit-banner" hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>Modo edición — modificá los datos y guardá</span>
+          <button class="edit-cancel" id="btn-cancel-edit" type="button">Cancelar</button>
+        </div>
+
+        <h1 class="panel-title" id="form-title">Registrar Venta</h1>
+        <input type="hidden" id="inp-edit-id" value="">
+
+        <form id="form-venta" novalidate autocomplete="off" spellcheck="false">
+
+          <div class="field">
+            <label class="lbl" for="inp-cliente">Nombre Cliente <span class="req">*</span></label>
+            <input class="inp" type="text" id="inp-cliente" placeholder="Ej: Romina García"
+              autocapitalize="words" autocomplete="off" required>
+          </div>
+
+          <div class="field">
+            <label class="lbl" for="sel-producto">Producto <span class="req">*</span></label>
+            <div class="sel-wrap">
+              <select class="inp sel" id="sel-producto" required>
+                <option value="">Seleccionar producto…</option>
+                <option value="Zapatillas">Zapatillas</option>
+                <option value="Abrigo">Abrigo</option>
+                <option value="Remera">Remera</option>
+                <option value="Pantalón">Pantalón</option>
+                <option value="Vestido">Vestido</option>
+                <option value="Campera">Campera</option>
+                <option value="Buzo">Buzo</option>
+                <option value="Accesorio">Accesorio</option>
+              </select>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+
+          <div class="field dyn" id="dyn-marca">
+            <label class="lbl" for="inp-marca">Marca</label>
+            <input class="inp" type="text" id="inp-marca" placeholder="Ej: Nike, Adidas, Puma…" autocapitalize="words">
+          </div>
+
+          <div class="field dyn" id="dyn-accesorio">
+            <label class="lbl" for="inp-accesorio">¿Qué accesorio? <span class="req">*</span></label>
+            <div class="sel-wrap">
+              <select class="inp sel" id="inp-accesorio">
+                <option value="">Seleccionar…</option>
+                <option value="Cartera">Cartera</option>
+                <option value="Mochila">Mochila</option>
+                <option value="Riñonera">Riñonera</option>
+                <option value="Cinturón">Cinturón</option>
+                <option value="Gorra">Gorra</option>
+                <option value="Bufanda">Bufanda</option>
+                <option value="Anteojos">Anteojos</option>
+                <option value="Bijouterie">Bijouterie</option>
+                <option value="Reloj">Reloj</option>
+                <option value="Pañuelo">Pañuelo</option>
+                <option value="Otro">Otro…</option>
+              </select>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+
+          <div class="field dyn" id="dyn-accesorio-otro">
+            <label class="lbl" for="inp-accesorio-otro">Especificá el accesorio <span class="req">*</span></label>
+            <input class="inp" type="text" id="inp-accesorio-otro" placeholder="Ej: Vincha, Porta mate…" autocapitalize="words">
+          </div>
+
+          <div class="field dyn" id="dyn-segmento">
+            <label class="lbl" for="sel-segmento">Segmento</label>
+            <div class="sel-wrap">
+              <select class="inp sel" id="sel-segmento">
+                <option value="">Seleccionar…</option>
+                <option value="Niño">Niño</option>
+                <option value="Adulto">Adulto</option>
+              </select>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+
+          <div class="row2">
+            <div class="field">
+              <label class="lbl" for="inp-talle">Talle <span class="req">*</span></label>
+              <input class="inp" type="text" id="inp-talle" placeholder="M, 38, 10…" required>
+            </div>
+            <div class="field">
+              <label class="lbl" for="inp-color">Color</label>
+              <input class="inp" type="text" id="inp-color" placeholder="Negro, Rojo…" autocapitalize="words">
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="lbl" for="inp-precio">Precio <span class="req">*</span></label>
+            <div class="prefix-wrap">
+              <span class="prefix">$</span>
+              <input class="inp inp-price" type="text" id="inp-precio"
+                placeholder="Ej: 22000" inputmode="decimal" autocomplete="off" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="lbl">Estado de Pago</label>
+            <div class="pay-toggle" role="group">
+              <button type="button" class="pay-btn pay-btn--active" data-status="pendiente">
+                <span class="pay-dot"></span>Pendiente
+              </button>
+              <button type="button" class="pay-btn" data-status="pagado">
+                <span class="pay-dot"></span>Pagado
+              </button>
+            </div>
+            <input type="hidden" id="inp-pago" value="pendiente">
+          </div>
+
+          <button type="submit" class="btn-primary" id="btn-guardar">
+            <span class="btn-lbl">Guardar Venta</span>
+            <svg class="btn-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+          </button>
+
+        </form>
+      </div>
+    </section>
+
+    <!-- ══════════ PANEL: Buscar / Entregar ══════════ -->
+    <section class="panel" id="panel-buscar" role="tabpanel">
+      <div class="panel-inner">
+        <h1 class="panel-title">Buscar Pedido</h1>
+
+        <div class="search-wrap">
+          <svg class="search-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input class="search-inp" type="search" id="inp-search"
+            placeholder="Escribí el nombre del cliente…" autocomplete="off">
+          <button class="search-clear" id="btn-search-clear" aria-label="Limpiar" hidden>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+
+        <div class="chips" role="group">
+          <button class="chip chip--active" data-filter="todos">Todos</button>
+          <button class="chip chip--pending" data-filter="pendiente">Pendientes</button>
+          <button class="chip chip--paid" data-filter="pagado">Pagados</button>
+          <button class="chip chip--delivered" data-filter="entregado">Entregados</button>
+        </div>
+
+        <div id="results" role="list" aria-live="polite">
+          <div class="empty" id="empty-state">
+            <div class="empty-ico">🔍</div>
+            <p>Buscá por nombre para ver los pedidos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PANEL: Resumen Diario ══════════ -->
+    <section class="panel" id="panel-resumen" role="tabpanel">
+      <div class="panel-inner">
+        <h1 class="panel-title">Resumen por Día</h1>
+        <div id="resumen-container" role="list" aria-live="polite">
+          <div class="empty">
+            <div class="empty-ico">📅</div>
+            <p>Todavía no hay pedidos registrados</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PANEL: Sorteos ══════════ -->
+    <section class="panel" id="panel-sorteo" role="tabpanel">
+      <div class="panel-inner">
+        <h1 class="panel-title">🏆 Sorteos en Vivo</h1>
+
+        <!-- Formulario rápido de sorteo -->
+        <form id="form-sorteo" novalidate autocomplete="off" class="sorteo-form">
+          <div class="sorteo-fields">
+            <div class="field" style="flex:1">
+              <label class="lbl" for="inp-ganador">Ganador <span class="req">*</span></label>
+              <input class="inp" type="text" id="inp-ganador"
+                placeholder="Nombre del ganador…" autocapitalize="words" required>
+            </div>
+            <div class="field" style="flex:1">
+              <label class="lbl" for="inp-premio">Premio <span class="req">*</span></label>
+              <input class="inp" type="text" id="inp-premio"
+                placeholder="Ej: Remera T:M roja…" autocapitalize="words" required>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary btn-sorteo" id="btn-sorteo">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span class="btn-lbl">Registrar Ganador</span>
+            <svg class="btn-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+          </button>
+        </form>
+
+        <!-- Lista de sorteos -->
+        <div id="sorteo-list" role="list" aria-live="polite">
+          <div class="empty" id="sorteo-empty">
+            <div class="empty-ico">🏆</div>
+            <p>Todavía no se registraron sorteos</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Toast global -->
+  <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
