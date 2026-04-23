@@ -16,7 +16,7 @@
 
   <div class="app">
 
-    <!-- ══════════ HEADER CON LOGO PROMINENTE ══════════ -->
+    <!-- ══════════ HEADER ══════════ -->
     <header class="header">
       <div class="header-brand">
         <img class="logo-img" src="img/central.png" alt="Central Variedades">
@@ -34,9 +34,9 @@
           <span class="hstat-num" id="stat-pending">0</span>
           <span class="hstat-lbl">Pendientes</span>
         </div>
-        <div class="hstat hstat-raffle">
-          <span class="hstat-num" id="stat-sorteos">0</span>
-          <span class="hstat-lbl">Sorteos</span>
+        <div class="hstat hstat-delivered-stat">
+          <span class="hstat-num" id="stat-entregados">0</span>
+          <span class="hstat-lbl">Entregados</span>
         </div>
       </div>
     </header>
@@ -51,6 +51,10 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Buscar
       </button>
+      <button class="tab tab--delivered-tab" role="tab" aria-selected="false" data-tab="entregados">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Entregados
+      </button>
       <button class="tab" role="tab" aria-selected="false" data-tab="resumen">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         Resumen
@@ -59,17 +63,12 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Sorteos
       </button>
-      <button class="tab" role="tab" aria-selected="false" data-tab="sorteo-vivo">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        En Vivo
-      </button>
     </nav>
 
     <!-- ══════════ PANEL: Nueva Venta ══════════ -->
     <section class="panel active" id="panel-nueva" role="tabpanel">
       <div class="panel-inner">
 
-        <!-- Banner modo edición (oculto por defecto) -->
         <div class="edit-banner" id="edit-banner" hidden>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
           <span>Modo edición — modificá los datos y guardá</span>
@@ -85,6 +84,12 @@
             <label class="lbl" for="inp-cliente">Nombre Cliente <span class="req">*</span></label>
             <input class="inp" type="text" id="inp-cliente" placeholder="Ej: Romina García"
               autocapitalize="words" autocomplete="off" required>
+          </div>
+
+          <div class="field">
+            <label class="lbl" for="inp-telefono">Teléfono <span class="opt">— opcional</span></label>
+            <input class="inp" type="tel" id="inp-telefono"
+              placeholder="Ej: 11 5555-1234" inputmode="tel" autocomplete="off">
           </div>
 
           <div class="field">
@@ -190,7 +195,7 @@
       </div>
     </section>
 
-    <!-- ══════════ PANEL: Buscar / Entregar ══════════ -->
+    <!-- ══════════ PANEL: Buscar ══════════ -->
     <section class="panel" id="panel-buscar" role="tabpanel">
       <div class="panel-inner">
         <h1 class="panel-title">Buscar Pedido</h1>
@@ -208,7 +213,6 @@
           <button class="chip chip--active" data-filter="todos">Todos</button>
           <button class="chip chip--pending" data-filter="pendiente">Pendientes</button>
           <button class="chip chip--paid" data-filter="pagado">Pagados</button>
-          <button class="chip chip--delivered" data-filter="entregado">Entregados</button>
         </div>
 
         <div id="results" role="list" aria-live="polite">
@@ -220,10 +224,29 @@
       </div>
     </section>
 
+    <!-- ══════════ PANEL: Productos Entregados ══════════ -->
+    <section class="panel" id="panel-entregados" role="tabpanel">
+      <div class="panel-inner">
+        <h1 class="panel-title">📦 Productos Entregados</h1>
+        <div id="entregados-list" role="list" aria-live="polite">
+          <div class="empty">
+            <div class="empty-ico">📦</div>
+            <p>Todavía no se entregó ningún producto</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ══════════ PANEL: Resumen Diario ══════════ -->
     <section class="panel" id="panel-resumen" role="tabpanel">
       <div class="panel-inner">
-        <h1 class="panel-title">Resumen por Día</h1>
+        <div class="resumen-top">
+          <h1 class="panel-title">Resumen por Día</h1>
+          <button class="btn-pdf" id="btn-pdf" title="Descargar PDF del día">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            PDF del día
+          </button>
+        </div>
         <div id="resumen-container" role="list" aria-live="polite">
           <div class="empty">
             <div class="empty-ico">📅</div>
@@ -238,7 +261,6 @@
       <div class="panel-inner">
         <h1 class="panel-title">🏆 Sorteos en Vivo</h1>
 
-        <!-- Formulario rápido de sorteo -->
         <form id="form-sorteo" novalidate autocomplete="off" class="sorteo-form">
           <div class="sorteo-fields">
             <div class="field" style="flex:1">
@@ -259,7 +281,6 @@
           </button>
         </form>
 
-        <!-- Lista de sorteos -->
         <div id="sorteo-list" role="list" aria-live="polite">
           <div class="empty" id="sorteo-empty">
             <div class="empty-ico">🏆</div>
@@ -269,42 +290,8 @@
       </div>
     </section>
 
-    <!-- ══════════ PANEL: Sorteo en Vivo ══════════ -->
-    <section class="panel" id="panel-sorteo-vivo" role="tabpanel">
-      <div class="panel-inner">
-        <h1 class="panel-title">🎲 Sorteo en Vivo</h1>
-        
-        <div class="field">
-          <label class="lbl">Sumar Participantes</label>
-          <div style="display:flex; gap:10px;">
-            <input class="inp" type="text" id="inp-vivo-nombre" placeholder="Nombre del participante..." autocomplete="off">
-            <button class="btn-primary" id="btn-vivo-add" style="margin:0; width:auto; padding:0 20px;">+</button>
-          </div>
-        </div>
-
-        <div id="vivo-lista-container" style="margin: 20px 0; min-height: 80px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--r-md); padding: 15px;">
-          <div id="vivo-lista" class="chips" style="margin:0">
-            <!-- Nombres dinámicos -->
-          </div>
-        </div>
-
-        <div class="results-count">En lista: <strong id="vivo-count">0</strong></div>
-
-        <button class="btn-primary" id="btn-vivo-start" disabled>
-          <span class="btn-lbl">¡INICIAR SORTEO!</span>
-          <svg class="btn-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
-        </button>
-
-        <div id="vivo-ganador-box" style="margin-top: 30px; text-align: center; display: none;">
-          <h2 style="font-size: var(--fs-xs); color: var(--txt-2); text-transform: uppercase; letter-spacing: 2px;">🏆 ¡EL GANADOR ES! 🏆</h2>
-          <div id="vivo-ganador-nombre" style="font-size: 38px; font-weight: 800; color: var(--raffle); margin-top: 5px; text-shadow: 0 0 20px rgba(167,139,250,.4);"></div>
-        </div>
-      </div>
-    </section>
-
   </div>
 
-  <!-- Toast global -->
   <div class="toast" id="toast" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
   <script type="module" src="app.js"></script>

@@ -22,13 +22,15 @@
   --accent:      var(--brand-green);
   --accent-grad: var(--brand-grad);
 
-  --pending:        #f59e0b;
-  --pending-bg:     rgba(245,158,11,.10);
-  --pending-border: rgba(245,158,11,.24);
+  /* ── PENDIENTE = rojo brillante ── */
+  --pending:        #ef4444;
+  --pending-bg:     rgba(239,68,68,.10);
+  --pending-border: rgba(239,68,68,.30);
 
-  --paid:        #8DC63F;
-  --paid-bg:     rgba(141,198,63,.10);
-  --paid-border: rgba(141,198,63,.26);
+  /* ── PAGADO = verde clarito ── */
+  --paid:        #4ade80;
+  --paid-bg:     rgba(74,222,128,.10);
+  --paid-border: rgba(74,222,128,.28);
 
   --delivered:        #2BBFBF;
   --delivered-bg:     rgba(43,191,191,.10);
@@ -86,7 +88,7 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 }
 
 /* ══════════════════════════════════════
-   HEADER — Logo protagonista
+   HEADER
 ══════════════════════════════════════ */
 .header {
   position: sticky;
@@ -103,8 +105,6 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
   flex-direction: column;
   align-items: center;
   padding: 18px 20px 12px;
-  position: relative;
-  /* línea gradiente sutil en el fondo */
   background: linear-gradient(to bottom, rgba(43,191,191,.06) 0%, transparent 100%);
 }
 
@@ -158,27 +158,32 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
   padding: 5px 14px;
   min-width: 64px;
 }
-.hstat-warn   .hstat-num { color: var(--pending); }
-.hstat-raffle .hstat-num { color: var(--raffle); }
+.hstat-warn              .hstat-num { color: var(--pending); }
+.hstat-delivered-stat    .hstat-num { color: var(--delivered); }
 .hstat-num { display: block; font-size: var(--fs-lg); font-weight: 700; line-height: 1.1; }
 .hstat-lbl { display: block; font-size: var(--fs-xs); color: var(--txt-2); margin-top: 1px; }
 
 /* ══════════════════════════════════════
-   TABS — 4 pestañas
+   TABS — desplazables en móvil
 ══════════════════════════════════════ */
 .tabs {
   display: flex;
   background: var(--bg-2);
   border-bottom: 1px solid var(--border);
-  padding: 0 8px;
+  padding: 0 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
 }
+.tabs::-webkit-scrollbar { display: none; }
+
 .tab {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
-  padding: 12px 6px;
+  padding: 12px 10px;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
@@ -192,8 +197,9 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
   white-space: nowrap;
 }
 .tab:hover { color: var(--txt); }
-.tab.active { color: var(--brand-green); border-bottom-color: var(--brand-green); }
-.tab--raffle.active { color: var(--raffle); border-bottom-color: var(--raffle); }
+.tab.active                  { color: var(--brand-green);  border-bottom-color: var(--brand-green); }
+.tab--raffle.active          { color: var(--raffle);       border-bottom-color: var(--raffle); }
+.tab--delivered-tab.active   { color: var(--delivered);    border-bottom-color: var(--delivered); }
 
 /* ══════════════════════════════════════
    PANELS
@@ -215,6 +221,32 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ── Resumen: fila título + botón PDF ── */
+.resumen-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.resumen-top .panel-title { margin-bottom: 0; }
+
+.btn-pdf {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(141,198,63,.08);
+  border: 1px solid rgba(141,198,63,.22);
+  border-radius: var(--r-md);
+  color: var(--brand-green);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t-fast);
+  flex-shrink: 0;
+}
+.btn-pdf:hover { background: rgba(141,198,63,.18); border-color: rgba(141,198,63,.36); }
 
 /* ══════════════════════════════════════
    BANNER MODO EDICIÓN
@@ -255,6 +287,7 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 
 .lbl { display: block; font-size: var(--fs-sm); font-weight: 500; color: var(--txt-2); margin-bottom: 6px; }
 .req { color: var(--brand-teal); margin-left: 2px; }
+.opt { color: var(--txt-3); font-weight: 400; font-size: var(--fs-xs); }
 
 .inp {
   width: 100%;
@@ -319,7 +352,6 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 .btn-primary:hover  { opacity: .88; transform: translateY(-1px); }
 .btn-primary:active { opacity: 1;   transform: translateY(0); }
 .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
-
 .btn-sorteo { margin-top: 12px; }
 
 .btn-spin { display: none; width: 18px; height: 18px; animation: spin .8s linear infinite; }
@@ -363,7 +395,7 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 .empty-ico { font-size: 38px; opacity: .45; margin-bottom: 14px; }
 .empty p { font-size: var(--fs-sm); line-height: 1.6; }
 
-#results { display: flex; flex-direction: column; gap: 12px; }
+#results, #entregados-list { display: flex; flex-direction: column; gap: 12px; }
 
 /* ══════════════════════════════════════
    TARJETAS DE PEDIDO
@@ -382,15 +414,21 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 .card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--brand-grad); opacity: 0; transition: opacity var(--t-fast); }
 .card:hover { transform: translateY(-2px); box-shadow: var(--sh-md); }
 
-.card-pending  { border-color: var(--pending-border);   background: var(--pending-bg); }
-.card-pending::after  { background: linear-gradient(90deg, var(--pending), #fbbf24); opacity: 1; }
-.card-paid     { border-color: var(--paid-border);      background: var(--paid-bg); }
-.card-paid::after     { background: var(--brand-grad); opacity: 1; }
-.card-delivered { border-color: var(--delivered-border); background: var(--delivered-bg); opacity: .75; }
+/* Pendiente: rojo brillante */
+.card-pending { border-color: var(--pending-border); background: var(--pending-bg); }
+.card-pending::after { background: linear-gradient(90deg, #ef4444, #f87171); opacity: 1; }
+
+/* Pagado: verde claro */
+.card-paid { border-color: var(--paid-border); background: var(--paid-bg); }
+.card-paid::after { background: linear-gradient(90deg, #4ade80, #86efac); opacity: 1; }
+
+/* Entregado */
+.card-delivered { border-color: var(--delivered-border); background: var(--delivered-bg); opacity: .80; }
 .card-delivered::after { background: linear-gradient(90deg, var(--brand-teal), #67e8f9); opacity: 1; }
 
-.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 11px; }
+.card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
 .card-name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -.025em; line-height: 1.15; }
+.card-phone { font-size: var(--fs-xs); color: var(--txt-2); margin-top: 3px; margin-bottom: 8px; }
 
 .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: var(--r-full); font-size: var(--fs-xs); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; flex-shrink: 0; }
 .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
@@ -408,9 +446,9 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 .act-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 9px 8px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--r-sm); color: var(--txt-2); font-size: var(--fs-xs); font-weight: 500; cursor: pointer; transition: all var(--t-fast); white-space: nowrap; }
 .act-btn:hover { color: var(--txt); border-color: var(--border-2); }
 .act-btn--pay     { background: var(--paid-bg);      border-color: var(--paid-border);      color: var(--paid); }
-.act-btn--pay:hover { background: rgba(141,198,63,.18); }
+.act-btn--pay:hover { background: rgba(74,222,128,.20); }
 .act-btn--deliver { background: var(--delivered-bg); border-color: var(--delivered-border); color: var(--delivered); }
-.act-btn--deliver:hover { background: rgba(43,191,191,.18); }
+.act-btn--deliver:hover { background: rgba(43,191,191,.20); }
 .act-btn--edit    { background: rgba(141,198,63,.06); }
 .act-btn--edit:hover { background: rgba(141,198,63,.14); color: var(--brand-green); border-color: var(--paid-border); }
 .act-btn--del { flex: 0 0 auto; width: 36px; padding: 9px; }
@@ -498,10 +536,19 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 .sorteo-btn { flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 9px; background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: var(--r-sm); color: var(--txt-2); font-size: var(--fs-xs); font-weight: 500; cursor: pointer; transition: all var(--t-fast); }
 .sorteo-btn:hover { color: var(--txt); border-color: var(--border-2); }
 .sorteo-btn--deliver { background: var(--paid-bg); border-color: var(--paid-border); color: var(--paid); }
-.sorteo-btn--deliver:hover { background: rgba(141,198,63,.20); }
+.sorteo-btn--deliver:hover { background: rgba(74,222,128,.22); }
 .sorteo-btn--del { flex: 0 0 auto; width: 36px; padding: 9px; }
 .sorteo-btn--del:hover { background: var(--danger-bg); border-color: rgba(239,68,68,.22); color: var(--danger); }
 .sorteo-time { font-size: var(--fs-xs); color: var(--txt-3); margin-top: 8px; }
+
+/* ══════════════════════════════════════
+   PRINT / PDF
+══════════════════════════════════════ */
+@media print {
+  body { background: #fff; color: #111; }
+  .app { max-width: none; box-shadow: none; }
+  .header, .tabs, .btn-pdf, .card-actions, .act-btn { display: none !important; }
+}
 
 /* ══════════════════════════════════════
    MOBILE
