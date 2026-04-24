@@ -145,6 +145,21 @@ const sorteoList = $("sorteo-list");
 const btnPdf  = $("btn-pdf");
 const toastEl = $("toast");
 
+// Sorteo en Vivo
+const inpVivoNombre  = $("inp-vivo-nombre");
+const btnVivoAdd     = $("btn-vivo-add");
+const btnLimpiarVivo = $("btn-limpiar-vivo");
+const vivoLista      = $("vivo-lista");
+const vivoCount      = $("vivo-count");
+const btnVivoStart   = $("btn-vivo-start");
+const vivoRuletaBox  = $("vivo-ruleta-box");
+const vivoRuletaNom  = $("vivo-ruleta-nombre");
+const vivoRuletaTot  = $("vivo-ruleta-total");
+const vivoGanadorBox = $("vivo-ganador-box");
+const vivoGanadorNom = $("vivo-ganador-nombre");
+const btnRepetirVivo = $("btn-repetir-vivo");
+const btnResetVivo   = $("btn-reset-vivo");
+
 // ============================================================
 //  BOOT
 // ============================================================
@@ -158,6 +173,7 @@ function boot() {
   setupSorteoForm();
   setupEditCancel();
   if (btnPdf) btnPdf.addEventListener("click", generatePDF);
+  setupSorteoVivo();
 
   storagePedidos.subscribe(ventas => {
     allVentas = ventas;
@@ -758,6 +774,142 @@ async function handleSorteoAction(action, id, s) {
   } catch (err) {
     console.error(err);
     showToast("Error al actualizar sorteo.", "err");
+  }
+}
+
+// ============================================================
+//  SORTEO EN VIVO — ruleta animada
+// ============================================================
+function setupSorteoVivo() {
+  if (!btnVivoAdd) return;
+
+  let participantes = [];
+  let spinTimer     = null;
+
+  // ── Agregar participante ──
+  function addParticipante() {
+    const nombre = inpVivoNombre.value.trim();
+    if (!nombre) return;
+    participantes.push(nombre);
+    inpVivoNombre.value = "";
+    renderParticipantes();
+    inpVivoNombre.focus();
+  }
+
+  btnVivoAdd.addEventListener("click", addParticipante);
+  inpVivoNombre.addEventListener("keypress", e => {
+    if (e.key === "Enter") { e.preventDefault(); addParticipante(); }
+  });
+
+  // ── Limpiar todo ──
+  if (btnLimpiarVivo) {
+    btnLimpiarVivo.addEventListener("click", () => {
+      participantes = [];
+      renderParticipantes();
+      resetVivoUI();
+    });
+  }
+
+  // ── Renderizar chips ──
+  function renderParticipantes() {
+    if (!vivoLista) return;
+    if (participantes.length === 0) {
+      vivoLista.innerHTML = `<p class="vivo-empty-hint">Agregá al menos 2 participantes para sortear</p>`;
+    } else {
+      vivoLista.innerHTML = participantes.map((n, i) => `
+        <div class="vivo-chip">
+          ${esc(n)}
+          <button class="vivo-chip-del" data-idx="${i}" title="Quitar">×</button>
+        </div>`).join("");
+      vivoLista.querySelectorAll(".vivo-chip-del").forEach(btn => {
+        btn.addEventListener("click", () => {
+          participantes.splice(Number(btn.dataset.idx), 1);
+          renderParticipantes();
+          if (participantes.length < 2) resetVivoUI();
+        });
+      });
+    }
+    if (vivoCount) vivoCount.textContent = participantes.length;
+    if (btnVivoStart) btnVivoStart.disabled = participantes.length < 2;
+  }
+
+  // ── Resetear UI ──
+  function resetVivoUI() {
+    if (vivoRuletaBox)  vivoRuletaBox.hidden  = true;
+    if (vivoGanadorBox) vivoGanadorBox.hidden = true;
+    if (spinTimer)      clearTimeout(spinTimer);
+    if (btnVivoStart)   setLoading(btnVivoStart, false);
+  }
+
+  // ── Iniciar sorteo ──
+  if (btnVivoStart) {
+    btnVivoStart.addEventListener("click", () => {
+      if (participantes.length < 2) return;
+      setLoading(btnVivoStart, true);
+
+      // Ocultar resultado anterior
+      if (vivoGanadorBox) vivoGanadorBox.hidden = true;
+
+      // Mostrar ruleta
+      if (vivoRuletaBox)  vivoRuletaBox.hidden  = false;
+      if (vivoRuletaTot)  vivoRuletaTot.textContent = participantes.length;
+
+      // Elegir ganador desde el inicio (aleatorio real)
+      const ganador = participantes[Math.floor(Math.random() * participantes.length)];
+
+      const duracion = 3000;
+      const inicio   = Date.now();
+
+      function spin() {
+        const transcurrido = Date.now() - inicio;
+        const progreso     = Math.min(transcurrido / duracion, 1);
+
+        if (progreso >= 1) {
+          // Revelar ganador
+          if (vivoRuletaBox)  vivoRuletaBox.hidden  = true;
+          if (vivoGanadorBox) {
+            vivoGanadorBox.hidden = false;
+            // Forzar re-animación
+            vivoGanadorBox.style.animation = "none";
+            void vivoGanadorBox.offsetHeight;
+            vivoGanadorBox.style.animation = "";
+          }
+          if (vivoGanadorNom) vivoGanadorNom.textContent = ganador;
+          setLoading(btnVivoStart, false);
+          showToast(`🏆 ¡${ganador} es el ganador!`, "ok");
+          return;
+        }
+
+        // Mostrar nombre aleatorio durante el spin
+        if (vivoRuletaNom) {
+          vivoRuletaNom.textContent = participantes[Math.floor(Math.random() * participantes.length)];
+        }
+
+        // Velocidad: arranca rápido (40ms) y frena progresivamente hasta 380ms
+        const delay = 40 + Math.pow(progreso, 2) * 340;
+        spinTimer = setTimeout(spin, delay);
+      }
+
+      spin();
+    });
+  }
+
+  // ── Repetir con los mismos participantes ──
+  if (btnRepetirVivo) {
+    btnRepetirVivo.addEventListener("click", () => {
+      if (vivoGanadorBox) vivoGanadorBox.hidden = true;
+      if (btnVivoStart) btnVivoStart.click();
+    });
+  }
+
+  // ── Nuevo sorteo (vaciar) ──
+  if (btnResetVivo) {
+    btnResetVivo.addEventListener("click", () => {
+      participantes = [];
+      renderParticipantes();
+      resetVivoUI();
+      if (inpVivoNombre) inpVivoNombre.focus();
+    });
   }
 }
 

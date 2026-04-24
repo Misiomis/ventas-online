@@ -63,6 +63,10 @@
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Sorteos
       </button>
+      <button class="tab tab--vivo" role="tab" aria-selected="false" data-tab="sorteo-vivo">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><circle cx="12" cy="12" r="10"/><path d="m9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        En Vivo
+      </button>
     </nav>
 
     <!-- ══════════ PANEL: Nueva Venta ══════════ -->
@@ -287,6 +291,67 @@
             <p>Todavía no se registraron sorteos</p>
           </div>
         </div>
+      </div>
+    </section>
+
+  </div>
+
+    <!-- ══════════ PANEL: Sorteo en Vivo ══════════ -->
+    <section class="panel" id="panel-sorteo-vivo" role="tabpanel">
+      <div class="panel-inner">
+        <h1 class="panel-title">🎲 Sorteo en Vivo</h1>
+
+        <!-- Agregar participante -->
+        <div class="field">
+          <label class="lbl">Agregar Participante</label>
+          <div class="vivo-add-row">
+            <input class="inp" type="text" id="inp-vivo-nombre"
+              placeholder="Nombre del participante…"
+              autocomplete="off" autocapitalize="words">
+            <button class="btn-vivo-add" id="btn-vivo-add" type="button">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de participantes -->
+        <div class="vivo-participantes-wrap" id="vivo-wrap">
+          <div class="vivo-meta">
+            <span class="vivo-meta-lbl">Participantes: <strong id="vivo-count">0</strong></span>
+            <button class="btn-limpiar-vivo" id="btn-limpiar-vivo" type="button">Limpiar todo</button>
+          </div>
+          <div id="vivo-lista" class="vivo-lista">
+            <p class="vivo-empty-hint">Agregá al menos 2 participantes para sortear</p>
+          </div>
+        </div>
+
+        <button class="btn-primary btn-vivo-start" id="btn-vivo-start" type="button" disabled>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          <span class="btn-lbl">¡INICIAR SORTEO!</span>
+          <svg class="btn-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.22-8.56"/></svg>
+        </button>
+
+        <!-- Ruleta animada -->
+        <div class="vivo-ruleta-box" id="vivo-ruleta-box" hidden>
+          <p class="vivo-ruleta-hint">Sorteando entre <span id="vivo-ruleta-total">0</span> participantes…</p>
+          <div class="vivo-ruleta-nombre" id="vivo-ruleta-nombre"></div>
+        </div>
+
+        <!-- Ganador -->
+        <div class="vivo-ganador-box" id="vivo-ganador-box" hidden>
+          <div class="vivo-confetti">🏆</div>
+          <p class="vivo-ganador-label">¡EL GANADOR ES!</p>
+          <div class="vivo-ganador-nombre" id="vivo-ganador-nombre"></div>
+          <div class="vivo-ganador-actions">
+            <button class="btn-repetir-vivo" id="btn-repetir-vivo" type="button">
+              🔄 Repetir con los mismos
+            </button>
+            <button class="btn-reset-vivo" id="btn-reset-vivo" type="button">
+              ✨ Nuevo sorteo
+            </button>
+          </div>
+        </div>
+
       </div>
     </section>
 

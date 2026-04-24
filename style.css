@@ -542,6 +542,207 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 .sorteo-time { font-size: var(--fs-xs); color: var(--txt-3); margin-top: 8px; }
 
 /* ══════════════════════════════════════
+   SORTEO EN VIVO
+══════════════════════════════════════ */
+.tab--vivo.active { color: #f59e0b; border-bottom-color: #f59e0b; }
+
+.vivo-add-row {
+  display: flex;
+  gap: 10px;
+}
+.vivo-add-row .inp { flex: 1; }
+.btn-vivo-add {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  background: var(--brand-grad);
+  border: none;
+  border-radius: var(--r-md);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity var(--t-fast), transform var(--t-fast);
+  box-shadow: 0 3px 12px rgba(141,198,63,.28);
+}
+.btn-vivo-add:hover  { opacity: .88; transform: translateY(-1px); }
+.btn-vivo-add:active { transform: translateY(0); }
+
+.vivo-participantes-wrap {
+  background: var(--bg-2);
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  margin-bottom: 4px;
+  min-height: 80px;
+}
+.vivo-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.vivo-meta-lbl { font-size: var(--fs-sm); color: var(--txt-2); }
+.vivo-meta-lbl strong { color: var(--txt); font-weight: 700; }
+.btn-limpiar-vivo {
+  background: none;
+  border: 1px solid var(--border-2);
+  border-radius: var(--r-sm);
+  color: var(--txt-3);
+  font-size: var(--fs-xs);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.btn-limpiar-vivo:hover { color: var(--danger); border-color: rgba(239,68,68,.28); background: var(--danger-bg); }
+
+.vivo-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.vivo-empty-hint {
+  font-size: var(--fs-xs);
+  color: var(--txt-3);
+  width: 100%;
+  text-align: center;
+  padding: 10px 0 4px;
+}
+.vivo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  background: var(--raffle-bg);
+  border: 1px solid var(--raffle-border);
+  border-radius: var(--r-full);
+  color: var(--raffle);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  animation: chip-in .18s ease;
+}
+@keyframes chip-in {
+  from { opacity: 0; transform: scale(.8); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.vivo-chip-del {
+  background: none;
+  border: none;
+  color: var(--raffle);
+  opacity: .45;
+  cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
+  padding: 0 2px;
+  transition: opacity var(--t-fast);
+}
+.vivo-chip-del:hover { opacity: 1; }
+
+.btn-vivo-start {
+  margin-top: 18px;
+  font-size: var(--fs-md);
+  font-weight: 800;
+  letter-spacing: .03em;
+  background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  box-shadow: 0 4px 20px rgba(245,158,11,.28);
+}
+.btn-vivo-start:not(:disabled):hover { opacity: .88; transform: translateY(-2px); }
+
+/* ── Ruleta animada ── */
+.vivo-ruleta-box {
+  margin-top: 26px;
+  text-align: center;
+  animation: fadein .22s ease;
+}
+.vivo-ruleta-hint {
+  font-size: var(--fs-xs);
+  color: var(--txt-3);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  margin-bottom: 12px;
+}
+.vivo-ruleta-nombre {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  color: #f59e0b;
+  text-shadow: 0 0 24px rgba(245,158,11,.5);
+  min-height: 48px;
+  transition: color .06s;
+  word-break: break-word;
+}
+
+/* ── Ganador reveal ── */
+.vivo-ganador-box {
+  margin-top: 26px;
+  text-align: center;
+  animation: winner-reveal .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes winner-reveal {
+  from { opacity: 0; transform: scale(.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.vivo-confetti {
+  font-size: 48px;
+  animation: bounce-trophy .6s ease infinite alternate;
+  display: block;
+  margin-bottom: 8px;
+}
+@keyframes bounce-trophy {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-10px); }
+}
+.vivo-ganador-label {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--txt-3);
+  text-transform: uppercase;
+  letter-spacing: .18em;
+  margin-bottom: 10px;
+}
+.vivo-ganador-nombre {
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -.04em;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 18px rgba(245,158,11,.35));
+  word-break: break-word;
+}
+.vivo-ganador-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.btn-repetir-vivo,
+.btn-reset-vivo {
+  padding: 10px 18px;
+  border-radius: var(--r-md);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.btn-repetir-vivo {
+  background: rgba(245,158,11,.10);
+  border: 1px solid rgba(245,158,11,.28);
+  color: #f59e0b;
+}
+.btn-repetir-vivo:hover { background: rgba(245,158,11,.20); }
+.btn-reset-vivo {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--txt-2);
+}
+.btn-reset-vivo:hover { background: var(--bg-3); color: var(--txt); }
+
+/* ══════════════════════════════════════
    PRINT / PDF
 ══════════════════════════════════════ */
 @media print {
